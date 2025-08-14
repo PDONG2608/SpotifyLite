@@ -9,7 +9,6 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -20,7 +19,7 @@
         tools:targetApi="31">
 
         <service
-            android:name=".player.PlaybackService"
+            android:name=".cleanarchitecture.player.PlaybackService"
             android:exported="true"
             android:foregroundServiceType="mediaPlayback">
             <intent-filter>
