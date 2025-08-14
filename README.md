@@ -42,23 +42,9 @@ Build: Gradle KTS
 
 Min SDK: 25 (adjust as needed)
 🏛️ Clean Architecture
-app/
- ├─ di/                // Hilt modules (network/player/repository bindings)
- ├─ player/            // Media3 service & controller glue
- ├─ data/              // "Data layer": sources & mappers
- │   ├─ remote/
- │   │   ├─ api/       // Retrofit interfaces
- │   │   └─ model/     // DTOs (kotlinx.serialization)
- │   ├─ paging/        // PagingSource implementations
- │   ├─ mapper/        // DTO -> domain converters
- │   └─ repo/          // Repository implementations
- ├─ domain/            // "Domain layer": pure Kotlin
- │   ├─ model/         // Entities (Track, etc.)
- │   └─ repo/          // Repository interfaces
- └─ ui/                // "Presentation layer": Compose screens + VMs
-     ├─ home/
-     ├─ search/
-     └─ player/
+
+     <img width="543" height="357" alt="image" src="https://github.com/user-attachments/assets/58c7dc73-c6c1-42e5-8663-dbb493cbb23d" />
+     
 Rules of thumb
 
 ui depends on domain (interfaces/models), not on data directly
@@ -85,18 +71,7 @@ Jamendo base URL: https://api.jamendo.com/v3.0/
 
 📲 Permissions & Manifest
 
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-
-<service
-    android:name=".player.PlaybackService"
-    android:exported="true"
-    android:foregroundServiceType="mediaPlayback">
-    <intent-filter>
-        <action android:name="androidx.media3.session.MediaSessionService" />
-    </intent-filter>
-</service>
+<img width="608" height="252" alt="image" src="https://github.com/user-attachments/assets/aa77b51b-08e7-4da2-803a-f0cd3c55c060" />
 
 ▶️ How Playback Works (Media3)
 
@@ -153,15 +128,9 @@ Snapshot tests for Compose UI states (loading/error/empty)
  Android Auto / MediaLibraryService
 
  📁 Sample Directory Tree
-
- app/src/main/java/com/example/jamplay/
- ├─ App.kt
- ├─ MainActivity.kt
- ├─ di/
- ├─ player/
- ├─ data/
- ├─ domain/
- └─ ui/
+ 
+<img width="320" height="166" alt="image" src="https://github.com/user-attachments/assets/db0d90b9-3683-4b46-a05b-ed31a482ec95" />
+ 
 ⚠️ Notes / Limitations
 
 Jamendo streams are public/free but subject to API terms/limits
