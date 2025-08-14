@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -17,7 +19,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "JAMENDO_CLIENT_ID", "\"ac4cdfcf\"")
+
+        val props = gradleLocalProperties(rootDir)
+        val cid = props.getProperty("JAMENDO_CLIENT_ID") ?: ""
+        buildConfigField("String", "JAMENDO_CLIENT_ID", "\"$cid\"")
     }
 
     buildFeatures { compose = true }
@@ -93,4 +98,7 @@ dependencies {
 
     // Coil for Compose
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    //Section Service
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.8.1")
 }

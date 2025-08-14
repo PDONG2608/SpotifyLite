@@ -1,0 +1,109 @@
+Clean Architecture
+app/
+ ├─ presentation/   // Compose UI + ViewModels (depends on domain)
+ ├─ domain/         // Pure Kotlin: entities, repositories, use-cases (no Android deps)
+ ├─ data/           // Retrofit/OkHttp, DTOs, mappers, Paging, repository impls
+ └─ player/         // Media3 service + helpers (platform adapter)
+
+Clean Architecture: Các tầng & mục chính
+1) Domain layer (thuần Kotlin, độc lập framework)
+
+Entities (Models nghiệp vụ): User, Order, Track,…
+
+Value Objects: Email, Money,… (bất biến, tự-kiểm tra hợp lệ).
+
+Use Cases / Interactors: Thực thi quy tắc nghiệp vụ, orchestration: LoginUser, GetProducts,…
+
+Repository Interfaces: “Hợp đồng” mà Data layer phải hiện thực: UserRepository, ProductRepository,…
+
+Nguyên tắc:
+
+Không import Android/Retrofit/Room.
+
+Dễ test, không side-effect IO (ủy quyền qua interface).
+
+Chỉ phụ thuộc vào chính nó.
+
+2) Data layer (triển khai truy cập dữ liệu)
+
+Repository Implementations: UserRepositoryImpl, ProductRepositoryImpl,… (implements từ Domain).
+
+Data Sources:
+
+RemoteDataSource (Retrofit/OkHttp, gRPC,…)
+
+LocalDataSource (Room, DataStore, Cache, Files,…)
+
+DTOs / Entities DB: Model dành riêng cho network/DB.
+
+Mappers: Dto <-> Domain, DbEntity <-> Domain.
+
+Paging / Cache / Policy: Kết hợp nguồn dữ liệu, chiến lược refresh.
+
+Nguyên tắc:
+
+Phụ thuộc Domain, không phụ thuộc Presentation.
+
+Cô lập thư viện hạ tầng (Retrofit, Room) trong Data.
+
+Không đẩy DTO ra ngoài Domain/Presentation.
+
+3) Presentation layer (UI + State)
+
+View (Compose UI / XML): Hiển thị & nhận event.
+
+ViewModel (MVVM) hoặc MVI: Chuyển đổi UseCase -> UiState, xử lý UiEvent.
+
+UiState / UiAction / UiEffect: Trạng thái bất biến, sự kiện một-lần, loading/error.
+
+Navigation: Graph/Routes tách biệt; UI không biết repository.
+
+Nguyên tắc:
+
+Phụ thuộc Domain (gọi UseCase), có thể phụ thuộc module “design-system”.
+
+Không viết logic nghiệp vụ phức tạp trong ViewModel.
+
+4) Cross-cutting / Infrastructure
+
+DI (Hilt/Koin/Dagger): Module cung cấp UseCase, Repo, DataSources, Retrofit, Room, Logger.
+
+Error handling: Exception mapping (network/db -> domain error).
+
+Schedulers/Dispatchers: CoroutineDispatcher inject.
+
+Logging, Analytics, Feature Flags.
+
+Design System: theme, components dùng chung.
+
+Nguyên tắc phụ thuộc (Dependency Rule)
+Presentation  --->  Domain  <---  Data
+         \           ^             /
+          \          |            /
+           ---- Cross-cutting ----
+
+
+Luồng phụ thuộc hướng vào Domain.
+
+Domain không biết Data/Presentation.
+
+Data hiện thực interfaces do Domain định nghĩa.
+
+Cấu trúc thư mục mẫu
+(A) Single-module (nhanh gọn cho app nhỏ)
+app/
+ ├─ di/                 # Hilt modules
+ ├─ domain/
+ │   ├─ model/          # Entities, Value Objects
+ │   ├─ repo/           # Repository interfaces
+ │   └─ usecase/        # Use Cases
+ ├─ data/
+ │   ├─ remote/         # Retrofit APIs, DTOs
+ │   ├─ local/          # Room entities, DAO
+ │   ├─ mapper/         # DTO/DB <-> Domain
+ │   └─ repo/           # Repo impl
+ ├─ presentation/
+ │   ├─ common/         # UiState, components
+ │   ├─ featureA/
+ │   └─ featureB/
+ └─ core/               # utils, error, dispatchers
