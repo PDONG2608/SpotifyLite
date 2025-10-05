@@ -1,4 +1,4 @@
-SpotifyLit — Android Music App (Jetpack Compose + Clean Architecture)
+SpotifyLite — Android Music App (Jetpack Compose + Clean Architecture)
 
 A modern, Spotify-like Android music app powered by Kotlin/Flow, Jetpack Compose (Material 3 + Navigation), Hilt (DI), Retrofit + OkHttp + Kotlinx Serialization, Paging 3, Media3, and Coil — using the Jamendo public API as the backend. Built with a layered Clean Architecture.
 
